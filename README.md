@@ -5,6 +5,7 @@ This repository contains tools to maintain the following repositories:
 - [yireo/magento2-replace-core](https://github.com/yireo/magento2-replace-core) removes optional core modules
 - [yireo/magento2-replace-graphql](https://github.com/yireo/magento2-replace-graphql) removes optional GraphQL modules
 - [yireo/magento2-replace-inventory](https://github.com/yireo/magento2-replace-inventory) removes optional MSI modules
+- [yireo/magento2-replace-content-staging](https://github.com/yireo/magento2-replace-content-staging) removes optional Content Staging modules
 - [yireo/magento2-replace-all](https://github.com/yireo/magento2-replace-all) removes all packages listed in the other directories
 
 ## Installation
