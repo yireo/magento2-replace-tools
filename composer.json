@@ -1,0 +1,12 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Yireo\\ReplaceTools\\": "src/"
+    }
+  },
+  "require": {
+    "gitonomy/gitlib": "^1.2",
+    "knplabs/github-api": "^2.14",
+    "php-http/guzzle6-adapter": "^1.1"
+  }
+}
