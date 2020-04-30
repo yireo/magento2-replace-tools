@@ -40,7 +40,7 @@ class RepositoryList
     static public function getRepositories(bool $includeAll = false): array
     {
         $repositories = [];
-        foreach (self::getRepositoryNames() as $repositoryName) {
+        foreach (self::getRepositoryNames($includeAll) as $repositoryName) {
             $repositories[] = new Repository($repositoryName);
         }
         return $repositories;

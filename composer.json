@@ -1,4 +1,6 @@
 {
+  "name": "yireo/magento2-replace-tools",
+  "description": "Tools to maintain yireo/magento2-replace packages",
   "autoload": {
     "psr-4": {
       "Yireo\\ReplaceTools\\": "src/"
