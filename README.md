@@ -14,6 +14,8 @@ The packages in the repositories above can be installed using simple composer co
     composer require yireo/magento2-replace-bundled
 
 ## Troubleshooting
+Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
+
 The following things might fail with these replacements:
 
 - A certain extension might have a dependency on Magento module X, documented via its `composer.json` or not. If so, skip
