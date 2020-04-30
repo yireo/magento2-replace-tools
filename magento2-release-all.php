@@ -11,7 +11,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 FilesystemResolver::getInstance()->setRootFolder(dirname(__DIR__));
 
 $magentoVersions = MagentoVersions::getVersions();
-$repositories = RepositoryList::getRepositories(false);
+$repositories = RepositoryList::getRepositories(true);
 $client = ClientFactory::getClient();
 
 foreach ($repositories as $repository) {
