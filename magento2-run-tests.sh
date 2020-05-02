@@ -70,7 +70,7 @@ function addPackages() {
     packages=$@
     for package in $packages; do
         echo "composer require --no-update $package:$magentoVersion"
-        composer require --no-update $package:$magentoVersion || exit
+        composer require --no-update $package:$magentoVersion
     done
     rm -rf composer.lock vendor/
     composer install --prefer-dist || exit
@@ -79,11 +79,15 @@ function addPackages() {
 function removePackages() {
     echo "Removing packages $*"
     packages=$*
-    composer remove --no-update $core $bundled $graphql $inventory $all
+    composer remove $packages
 }
 
-test -d vendor/ || installMagento
+test -f composer.json || installMagento
 test -f app/etc/env.php || setupMagento
+
+removePackages $all $core $bundled $graphql $inventory
+
+addPackages $all; reconfigureMagento; removePackages $all
 
 addPackages $core; reconfigureMagento; removePackages $core
 addPackages $bundled; reconfigureMagento; removePackages $bundled
