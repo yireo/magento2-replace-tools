@@ -8,21 +8,37 @@ This repository contains tools to maintain the following repositories:
 - [yireo/magento2-replace-content-staging](https://github.com/yireo/magento2-replace-content-staging) removes optional Content Staging modules
 - [yireo/magento2-replace-all](https://github.com/yireo/magento2-replace-all) removes all packages listed in the other directories
 
-## Installation
-The packages in the repositories above can be installed using simple composer commands:
+Please note that the `replace` feature of composer as being used in these repositories is not well documentated and probably abused a bit. If you
+are not willing to invest time to troubleshoot this yourself, please forget about this approach entirely so that we don't waste anyones time.
+
+## Usage
+The packages in the repositories above can be installed using simple composer commands (for instance using the `magento2-replace-bundled` package):
 
     composer require yireo/magento2-replace-bundled
 
-## Troubleshooting
-### Run setup:di:compile to confirm what is working
 Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
 
-### Have a clean start
-If you bump into an issue with `composer require`, consider running it with a `--no-update` flag first:
+    rm -r generated/
+    bin/magento setup:di:compile
 
-    composer require yireo/magento2-replace-bundled --no-update
+## Troubleshooting
+### If a package can not be installed right away
+If the `composer require` command does not work for you, try the following:
 
-Next, run `composer install`. If this fails, try to remove the `vendor/` folder and try again.
+    composer require --no-update yireo/magento2-replace-bundled
+    composer install
+
+If this fails, try the following:
+
+    rm -r vendor/
+    composer require --no-update yireo/magento2-replace-bundled
+    composer install
+
+If this fails, try the following:
+
+    rm -r vendor/ composer.lock
+    composer require --no-update yireo/magento2-replace-bundled
+    composer install
 
 ### What else could fail
 The following things might fail with these replacements:
