@@ -79,7 +79,7 @@ function addPackages() {
 function removePackages() {
     echo "Removing packages $*"
     packages=$*
-    composer remove $packages
+    composer remove --no-update $packages
 }
 
 test -f composer.json || installMagento
