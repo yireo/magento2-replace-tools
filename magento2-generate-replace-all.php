@@ -15,9 +15,9 @@ $magentoVersions = MagentoVersions::getVersions();
 $repositories = RepositoryList::getRepositories();
 $parentRepository = new Repository('magento2-replace-all', Environment::getAccountName());
 
-$replacements = [];
 foreach ($magentoVersions as $magentoVersion) {
     $branch = 'magento-' . $magentoVersion;
+    $replacements = [];
 
     foreach ($repositories as $repository) {
         echo 'Reading "'.$repository->getName().'" with branch "'.$branch.'"'."\n";
