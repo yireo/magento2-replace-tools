@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Yireo\ReplaceTools;
 
 use Exception;
+use Github\Client;
+use Github\Exception\MissingArgumentException;
+use RuntimeException;
 use Yireo\ReplaceTools\Repository\LocalComposerFile;
 use Yireo\ReplaceTools\Repository\RemoteComposerFile;
 use Gitonomy\Git\Repository as GitRepository;
+use Yireo\ReplaceTools\Util\VersionUtil;
 
 /**
  * Class Repository
@@ -21,19 +25,40 @@ class Repository
     private $name;
 
     /**
+     * @var string
+     */
+    private $accountName;
+
+    /**
      * @var GitRepository
      */
     private $gitRepository;
 
     /**
+     * @var Client
+     */
+    private $client;
+
+    /**
      * Repository constructor.
      * @param string $name
+     * @param string $accountName
      * @throws Exception
      */
-    public function __construct(string $name)
+    public function __construct(string $name, string $accountName)
     {
         $this->name = $name;
+        $this->accountName = $accountName;
         $this->gitRepository = new GitRepository($this->getFolder());
+        $this->client = ClientFactory::getClient();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 
     /**
@@ -94,12 +119,82 @@ class Repository
         return new RemoteComposerFile($this, $branch);
     }
 
-    public function release(string $branch)
+    /**
+     * @return array
+     */
+    public function getAllReleases(): array
     {
-        $client = (new ClientFactory())->getClient();
-        $releases = $client->api('repo')->releases()->all('twbs', 'bootstrap');
-        return $releases;
-        //$response = $client->api('repo')->releases()->remove('twbs', 'bootstrap', $id);
+        return $this->client->api('repo')->releases()->all($this->accountName, $this->name);
+    }
+
+    /**
+     * @param string $branchName
+     * @return array
+     */
+    public function getReleasesByPrefix(string $prefix): array
+    {
+        $allReleases = $this->getAllReleases();
+        $branchReleases = [];
+        foreach ($allReleases as $allRelease) {
+            $allReleaseTag = $allRelease['tag_name'];
+            if (substr($allReleaseTag, 0, strlen($prefix)) === $prefix) {
+                $branchReleases[$allReleaseTag] = $allRelease;
+            }
+        }
+
+        if (empty($branchReleases)) {
+            throw new RuntimeException('No releases found for prefix "' . $prefix . '..."');
+        }
+
+        return $branchReleases;
+    }
+
+    /**
+     * @param string $prefix
+     * @return array
+     */
+    public function getLatestReleaseByPrefix(string $prefix): array
+    {
+        $branchReleases = $this->getReleasesByPrefix($prefix);
+        krsort($branchReleases);
+        return array_shift($branchReleases);
+    }
+
+    /**
+     * @return array
+     */
+    public function getLatestRelease(): array
+    {
+        return $this->client->api('repo')->releases()->latest($this->accountName, $this->name);
+    }
+
+    /**
+     * @param string $prefix
+     * @return string
+     */
+    public function getNewVersionByPrefix(string $prefix): string
+    {
+        $latestRelease = $this->getLatestReleaseByPrefix($prefix);
+        return (new VersionUtil())->getNewVersion($latestRelease['tag_name']);
+    }
+
+    /**
+     * @param string $branch
+     * @param string $version
+     * @return array
+     * @throws MissingArgumentException
+     */
+    public function release(string $branch, string $version): array
+    {
+        return $this->client->api('repo')->releases()->create(
+            $this->accountName,
+            $this->name,
+            array(
+                'tag_name' => $version,
+                'target_commitish' => $branch,
+                'name' => $version
+            )
+        );
     }
 
     /**

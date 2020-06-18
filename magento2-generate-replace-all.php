@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Yireo\ReplaceTools\Environment;
 use Yireo\ReplaceTools\FilesystemResolver;
 use Yireo\ReplaceTools\MagentoVersions;
 use Yireo\ReplaceTools\Repository;
@@ -12,7 +13,7 @@ FilesystemResolver::getInstance()->setRootFolder(dirname(__DIR__));
 
 $magentoVersions = MagentoVersions::getVersions();
 $repositories = RepositoryList::getRepositories();
-$parentRepository = new Repository('magento2-replace-all');
+$parentRepository = new Repository('magento2-replace-all', Environment::getAccountName());
 
 $replacements = [];
 foreach ($magentoVersions as $magentoVersion) {

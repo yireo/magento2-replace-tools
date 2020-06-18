@@ -19,10 +19,12 @@ class ClientFactory
      */
     static public function getClient(): Client
     {
-        $environment = require(__DIR__ . '/../.env.php');
-        if (empty($environment['GITHUB_TOKEN']) || empty($environment['GITHUB_PASSWORD'])) {
-            throw new Exception('GitHub token or password are missing');
+        static $client;
+        if ($client instanceof Client) {
+            return $client;
         }
+
+        $environment = Environment::getEnvironment();
 
         $client = new Client();
         $client->authenticate(

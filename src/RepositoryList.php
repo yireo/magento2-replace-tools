@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yireo\ReplaceTools;
 
 use Exception;
+use RuntimeException;
 
 /**
  * Class RepositoryList
@@ -41,8 +42,23 @@ class RepositoryList
     {
         $repositories = [];
         foreach (self::getRepositoryNames($includeAll) as $repositoryName) {
-            $repositories[] = new Repository($repositoryName);
+            $repositories[] = new Repository($repositoryName, Environment::getAccountName());
         }
         return $repositories;
+    }
+
+    /**
+     * @param string $repositoryName
+     * @return Repository
+     */
+    static public function getRepositoryByName(string $repositoryName): Repository
+    {
+        foreach(self::getRepositories(true) as $repository) {
+            if ($repository->getName() === $repositoryName) {
+                return $repository;
+            }
+        }
+
+        throw new RuntimeException('Invalid repository name');
     }
 }
