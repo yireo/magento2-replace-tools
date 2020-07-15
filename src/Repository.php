@@ -180,6 +180,19 @@ class Repository
 
     /**
      * @param string $branch
+     * @return bool
+     * @throws Exception
+     */
+    public function update(string $branch): bool
+    {
+        chdir($this->getFolder());
+        exec('git checkout -q ' . $branch);
+        exec('git pull -q origin ' . $branch);
+        return true;
+    }
+
+    /**
+     * @param string $branch
      * @param string $version
      * @return array
      * @throws MissingArgumentException

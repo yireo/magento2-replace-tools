@@ -30,7 +30,7 @@ class Environment
     {
         $environment = require(__DIR__ . '/../.env.php');
 
-        if (empty($environment['GITHUB_ACCOUNT']) && empty($environment['GITHUB_ACCOUNT'])) {
+        if (empty($environment['GITHUB_ACCOUNT'])) {
             throw new Exception('GitHub account is missing.');
         }
 
