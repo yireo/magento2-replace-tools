@@ -10,5 +10,8 @@
     "gitonomy/gitlib": "^1.2",
     "knplabs/github-api": "^2.14",
     "php-http/guzzle6-adapter": "^1.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.2"
   }
 }
