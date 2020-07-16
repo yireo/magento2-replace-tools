@@ -11,8 +11,7 @@ class VersionUtilTest extends TestCase
     public function testGetNewVersion()
     {
         $versionUtil = new VersionUtil();
-        $this->assertSame('1.0.0-p1', $versionUtil->getNewVersion('1.0.0'));
-        $this->assertSame('1.0.0-p2', $versionUtil->getNewVersion('1.0.0-p1'));
-        $this->assertSame('1.0.0-p3', $versionUtil->getNewVersion('1.0.0-p2'));
+        $this->assertSame('1.0.1', $versionUtil->getNewVersion('1.0.0'));
+        $this->assertSame('1.0.2', $versionUtil->getNewVersion('1.0.1'));
     }
 }
