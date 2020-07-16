@@ -1,0 +1,12 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  build:
+    name: yireo/magento2-replace-tools-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Install composer dependencies
+        uses: php-actions/composer@v1
