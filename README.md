@@ -22,6 +22,8 @@ Once you install a replacement, make sure to wipe out the `generated/` folder fi
     bin/magento setup:di:compile
 
 ## Troubleshooting
+**Please note that in the tips below the `magento2-replace-bundled` package is assumed. Substitute this for the package that you are trying to install.**
+
 ### If a package can not be installed right away
 If the `composer require` command does not work for you, try the following:
 
@@ -38,7 +40,13 @@ If this fails, try the following:
 
     rm -r vendor/ composer.lock
     composer require --no-update yireo/magento2-replace-bundled
-    composer install
+    composer update
+
+Last but not least, try to add the GitHub repository 
+
+    composer config repositories.magento2-replace-all vcs git@github.com:yireo/magento2-replace-bundled.git
+    composer require --no-update yireo/magento2-replace-bundled
+    composer update
 
 ### What else could fail
 The following things might fail with these replacements:
