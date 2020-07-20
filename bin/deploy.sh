@@ -1,7 +1,8 @@
 #!/bin/bash
 for repo in all bundled content-staging core graphql inventory; do
     cd magento2-replace-${repo}
-    for version in 2.3.3 2.3.4 2.3.5; do
+    #for version in 2.3.3 2.3.4 2.3.5; do
+    for version in 2.3.5; do
         branch=magento-$version
         git checkout $branch
         cp -R ../magento2-replace-tools/github/workflows/* .github/workflows/
