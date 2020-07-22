@@ -26,5 +26,6 @@ if (!in_array($magentoVersion, MagentoVersions::getVersions())) {
 }
 
 $newVersion = $repository->getNewVersionByPrefix($magentoVersion);
+echo "Releasing new version $newVersion\n";
 $branch = 'magento-' . $magentoVersion;
 $repository->release($branch, $newVersion);
