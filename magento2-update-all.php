@@ -22,4 +22,3 @@ foreach ($repositories as $repository) {
         $repository->update($branch);
     }
 }
-

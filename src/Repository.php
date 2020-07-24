@@ -161,6 +161,15 @@ class Repository
     }
 
     /**
+     * @param string $branchName
+     * @return string
+     */
+    public function getInitialReleaseByBranchName(string $branchName): string
+    {
+        return preg_replace('/^magento-2./', '', $branchName).'.0';
+    }
+
+    /**
      * @return array
      */
     public function getLatestRelease(): array
@@ -174,8 +183,12 @@ class Repository
      */
     public function getNewVersionByBranchName(string $branchName): string
     {
-        $latestRelease = $this->getLatestReleaseByBranchName($branchName);
-        return (new VersionUtil())->getNewVersion($latestRelease['tag_name']);
+        try {
+            $latestRelease = $this->getLatestReleaseByBranchName($branchName);
+            return (new VersionUtil())->getNewVersion($latestRelease['tag_name']);
+        } catch(\RuntimeException $e) {
+            return $this->getInitialReleaseByBranchName($branchName);
+        }
     }
 
     /**

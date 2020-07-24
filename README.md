@@ -2,10 +2,12 @@
 This repository contains tools to maintain the following repositories:
 
 - [yireo/magento2-replace-bundled](https://github.com/yireo/magento2-replace-bundled) removes third party bundled extensions
+Content Staging modules
+- [yireo/magento2-replace-content-staging](https://github.com/yireo/magento2-replace-content-staging) removes optional Content Staging modules
 - [yireo/magento2-replace-core](https://github.com/yireo/magento2-replace-core) removes optional core modules
 - [yireo/magento2-replace-graphql](https://github.com/yireo/magento2-replace-graphql) removes optional GraphQL modules
 - [yireo/magento2-replace-inventory](https://github.com/yireo/magento2-replace-inventory) removes optional MSI modules
-- [yireo/magento2-replace-content-staging](https://github.com/yireo/magento2-replace-content-staging) removes optional Content Staging modules
+- [yireo/magento2-replace-sample-data](https://github.com/yireo/magento2-replace-sample-data) removes sample data modules
 - [yireo/magento2-replace-all](https://github.com/yireo/magento2-replace-all) removes all packages listed in the other directories
 
 Please note that the `replace` feature of composer as being used in these repositories is not well documentated and probably abused a bit. If you

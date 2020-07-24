@@ -19,11 +19,12 @@ class RepositoryList
     static public function getRepositoryNames(bool $includeAll = false): array
     {
         $repositoryNames = [
+            'magento2-replace-content-staging',
             'magento2-replace-core',
             'magento2-replace-bundled',
             'magento2-replace-graphql',
             'magento2-replace-inventory',
-            'magento2-replace-content-staging',
+            'magento2-replace-sample-data',
         ];
 
         if ($includeAll) {
@@ -50,6 +51,7 @@ class RepositoryList
     /**
      * @param string $repositoryName
      * @return Repository
+     * @throws Exception
      */
     static public function getRepositoryByName(string $repositoryName): Repository
     {
