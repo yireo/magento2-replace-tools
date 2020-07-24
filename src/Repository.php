@@ -131,31 +131,31 @@ class Repository
      * @param string $branchName
      * @return array
      */
-    public function getReleasesByPrefix(string $prefix): array
+    public function getReleasesByBranch(string $branchName): array
     {
         $allReleases = $this->getAllReleases();
         $branchReleases = [];
-        foreach ($allReleases as $allRelease) {
-            $allReleaseTag = $allRelease['tag_name'];
-            if (substr($allReleaseTag, 0, strlen($prefix)) === $prefix) {
-                $branchReleases[$allReleaseTag] = $allRelease;
+        foreach ($allReleases as $release) {
+            $releaseTag = $release['tag_name'];
+            if ($release['target_commitish'] === $branchName) {
+                $branchReleases[$releaseTag] = $release;
             }
         }
 
         if (empty($branchReleases)) {
-            throw new RuntimeException('No releases found for prefix "' . $prefix . '..."');
+            throw new RuntimeException('No releases found for branch "' . $branchName . '"');
         }
 
         return $branchReleases;
     }
 
     /**
-     * @param string $prefix
+     * @param string $branchName
      * @return array
      */
-    public function getLatestReleaseByPrefix(string $prefix): array
+    public function getLatestReleaseByBranchName(string $branchName): array
     {
-        $branchReleases = $this->getReleasesByPrefix($prefix);
+        $branchReleases = $this->getReleasesByBranch($branchName);
         krsort($branchReleases);
         return array_shift($branchReleases);
     }
@@ -169,12 +169,12 @@ class Repository
     }
 
     /**
-     * @param string $prefix
+     * @param string $branchName
      * @return string
      */
-    public function getNewVersionByPrefix(string $prefix): string
+    public function getNewVersionByBranchName(string $branchName): string
     {
-        $latestRelease = $this->getLatestReleaseByPrefix($prefix);
+        $latestRelease = $this->getLatestReleaseByBranchName($branchName);
         return (new VersionUtil())->getNewVersion($latestRelease['tag_name']);
     }
 

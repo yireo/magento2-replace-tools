@@ -25,7 +25,7 @@ if (!in_array($magentoVersion, MagentoVersions::getVersions())) {
     throw new RuntimeException('Invalid Magento version');
 }
 
-$newVersion = $repository->getNewVersionByPrefix($magentoVersion);
+$newVersion = $repository->getNewVersionByBranchName('magento-'.$magentoVersion);
 echo "Releasing new version $newVersion\n";
 $branch = 'magento-' . $magentoVersion;
 $repository->release($branch, $newVersion);

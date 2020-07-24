@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Yireo\ReplaceTools\FilesystemResolver;
@@ -21,8 +22,8 @@ if (!in_array($repositoryName, RepositoryList::getRepositories(true))) {
 
 $repository = RepositoryList::getRepositoryByName($repositoryName);
 foreach (MagentoVersions::getVersions() as $magentoVersion) {
-    $newVersion = $repository->getNewVersionByPrefix($magentoVersion);
-    $branch = 'magento-' . $magentoVersion;
-    $repository->release($branch, $newVersion);
+    $branchName = 'magento-' . $magentoVersion;
+    $newVersion = $repository->getNewVersionByBranchName($branchName);
+    $repository->release($branchName, $newVersion);
 }
 
