@@ -1,17 +1,18 @@
 #!/bin/bash
-for repo in all bundled content-staging core graphql inventory; do
+for repo in all bundled content-staging core graphql inventory sample-data; do
     cd magento2-replace-${repo}
-    #for version in 2.3.3 2.3.4 2.3.5; do
-    for version in 2.3.5; do
+    git checkout master
+    git pull origin master
+    cat ../README.md | sed s/REPONAME/$repo/ > README.md
+    git commit README.md -m 'Updated README'
+    git push origin master
+
+    for version in 2.3.1 2.3.2 2.3.3 2.3.4 2.3.5 2.3.6 2.4.0; do
         branch=magento-$version
         git checkout $branch
-        cp -R ../magento2-replace-tools/github/workflows/* .github/workflows/
-        echo $version > .github/workflows/magento_version.txt
-        if [ "$version" == "2.3.5" ]; then
-            echo "2.3.5-p1" > .github/workflows/magento_version.txt
-        fi
-        git add .github/
-        git commit .github -m 'New CI files'
+        git pull origin $branch
+        cat ../README.md | sed s/REPONAME/$repo/ > README.md
+        git commit README.md -m 'Updated README'
         git push origin $branch
     done
     cd -
