@@ -16,8 +16,8 @@ are not willing to invest time to troubleshoot this yourself, please forget abou
 ## Usage
 The packages in the repositories above can be installed using simple composer commands (for instance using the `magento2-replace-bundled` package):
 
-    composer require yireo/magento2-replace-bundled # For Magento 2.4.X --no-update
-    composer require yireo/magento2-replace-bundled:^3.0 # For Magento 2.3.X --no-update
+- `composer require yireo/magento2-replace-bundled --no-update` for Magento 2.4.X
+- `composer require yireo/magento2-replace-bundled:^3.0 --no-update` for Magento 2.3.X
 
 And then:
 
