@@ -16,7 +16,12 @@ are not willing to invest time to troubleshoot this yourself, please forget abou
 ## Usage
 The packages in the repositories above can be installed using simple composer commands (for instance using the `magento2-replace-bundled` package):
 
-    composer require yireo/magento2-replace-bundled
+    composer require yireo/magento2-replace-bundled # For Magento 2.4.X --no-update
+    composer require yireo/magento2-replace-bundled:^3.0 # For Magento 2.3.X --no-update
+
+And then:
+
+    composer install
 
 Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
 
@@ -28,11 +33,6 @@ Once you install a replacement, make sure to wipe out the `generated/` folder fi
 
 ### If a package can not be installed right away
 If the `composer require` command does not work for you, try the following:
-
-    composer require --no-update yireo/magento2-replace-bundled
-    composer install
-
-If this fails, try the following:
 
     rm -r vendor/
     composer require --no-update yireo/magento2-replace-bundled
