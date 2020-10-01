@@ -67,7 +67,9 @@ Intruiging, isn't it? Yes, this could happen. Perhaps some modules that you are 
 Theoretically, yes. Make sure to understand that these packages are not modules, not libraries, not Magento extensions. It is a gathering of
 hacks. So, if you understand the benefit of the `replace` trick in composer, you can use these repository to ease the pain of upgrading.
 
-One conceptual idea in these repositories is to try to keep track of the main Magento version by creating a branch `2.x.y` with a corresponding release `x.y.z`. So, Magento 2.3.5 matches with the replace branch `3.5.*`. Sometimes the actual work falls behind, which by no means indicates that the current bundling of tricks no longer works. Simply, install this package using `composer` and see if this works for you (see below).
+One conceptual idea in these repositories is to try to keep track of the main Magento version by creating a branch `2.x.y` with a corresponding release `x.y.z`. So, Magento 2.3.5 matches with the replace branch `3.5.*`. Magento 2.4.1 matches with the replace branch `4.1`. By adding a dependency with `^4.0` in your `composer.json`, this will automatically upgrade to any `4.X` version, but exclude a major bump to `5.X`.
+
+Sometimes the actual work falls behind, which by no means indicates that the current bundling of tricks no longer works. Simply, install this package using `composer` and see if this works for you (see below).
 
 #### How do I upgrade the replacements to Magento 2.4.X?
 Please note the above on the versioning strategy. Once that's understood, the actual implementation is simple: `composer require yireo/magento2-replace-core:^4.0 --no-update`.
