@@ -23,10 +23,11 @@ And then:
 
     composer install
 
-Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
+Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` and `bin/magento setup:upgrade` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
 
     rm -r generated/
     bin/magento setup:di:compile
+    bin/magento setup:upgrade
 
 ## Troubleshooting
 **Please note that in the tips below the `magento2-replace-bundled` package is assumed. Substitute this for the package that you are trying to install.**
