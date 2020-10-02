@@ -51,6 +51,8 @@ Last but not least, try to add the GitHub repository
     composer require --no-update yireo/magento2-replace-bundled
     composer update
 
+Please do **not** contact us for support (via email, Slack or GitHub issue) before having tried out the commands, including the `rm` commands. If you think that running the `rm` command is not needed, because you know how `composer update` works, let's debate this **after** you have actually tried out the instructions above.
+
 ### What else could fail
 The following things might fail with these replacements:
 
