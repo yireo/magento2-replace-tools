@@ -16,9 +16,10 @@ class RepositoryList
     /**
      * @return string[]
      */
-    static public function getRepositoryNames(bool $includeAll = false): array
+    static public function getRepositoryNames(): array
     {
         $repositoryNames = [
+            'magento2-replace-all',
             'magento2-replace-content-staging',
             'magento2-replace-core',
             'magento2-replace-bundled',
@@ -26,10 +27,6 @@ class RepositoryList
             'magento2-replace-inventory',
             'magento2-replace-sample-data',
         ];
-
-        if ($includeAll) {
-            $repositoryNames[] = 'magento2-replace-all';
-        }
 
         return $repositoryNames;
     }
