@@ -10,7 +10,7 @@ Content Staging modules
 - [yireo/magento2-replace-sample-data](https://github.com/yireo/magento2-replace-sample-data) removes sample data modules
 - [yireo/magento2-replace-all](https://github.com/yireo/magento2-replace-all) removes all packages listed in the other directories
 
-Please note that the `replace` feature of composer as being used in these repositories is not well documentated and probably abused a bit. If you
+Please note that the `replace` feature of composer as being used in these repositories is not well documented and probably abused a bit. If you
 are not willing to invest time to troubleshoot this yourself, please forget about this approach entirely so that we don't waste anyones time.
 
 ## Usage
