@@ -62,6 +62,14 @@ The following things might fail with these replacements:
   (`setup:di:compile`). If this concerns a setup with only core packages, make sure to open an **Issue**. 
 
 ## FAQ
+#### I try to install this with `composer require a/b` but get errors
+Please note that this kind of question is not going to be answered anymore, except here: Do **not** use a simple `composer require a/b` command. It is not documented above, it is not part of the procedure and it does not work. Do not reason that if you know composer, you know that a simple `composer require a/b` must work. If you think composer replacements are installed the way as composer packages, you do not know composer replacements.
+
+If you want to receive support, follow along with **all** of the commands outlined above. And stick to it. Don't argue, don't reason, but stick with it. Next, if all of the workarounds with composer commands fail, only then report an issue on GitHub.
+
+#### Your extension does not work
+You are damn right it does not! The reason is that it is not an extension. This is **not** about installing Magento modules. This is about replacing composer packages with nothing. The *extension* is not there, it is not a Magento module. It is rather a carefully crafted composer configuration that could be copied manually or installed with the right procedure. It is a composer meta-package with an undocumented trick. If you don't like it, don't use it.
+
 #### Installing a package leads to many errors
 Intruiging, isn't it? Yes, this could happen. Perhaps some modules that you are replacing are in use with your own custom code. Or perhaps you are relying on other third party extensions that have yet an undocumented dependency that conflicts with this `replace` trick. If you are not willing to troubleshoot this, simply skip this trick and move on. If you are willing to troubleshoot this, copy the `replace` lines to your own `composer.json` and remove lines one-by-one until you have found the culprit.
 
