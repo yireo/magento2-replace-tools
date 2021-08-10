@@ -127,7 +127,7 @@ class Repository
 
     /**
      * @param string $branchName
-     * @return array
+     * @return array[]
      */
     public function getReleasesByBranch(string $branchName): array
     {
@@ -135,7 +135,9 @@ class Repository
         $branchReleases = [];
         foreach ($allReleases as $release) {
             $releaseTag = $release['tag_name'];
-            if ($release['target_commitish'] === $branchName) {
+            $releaseNumbers = explode(".", $releaseTag);
+            $releaseMajor = $releaseNumbers[0];
+            if ($branchName === 'magento-2.'.$releaseMajor) {
                 $branchReleases[$releaseTag] = $release;
             }
         }
@@ -154,6 +156,10 @@ class Repository
     public function getLatestReleaseByBranchName(string $branchName): array
     {
         $branchReleases = $this->getReleasesByBranch($branchName);
+        if (empty($branchReleases)) {
+            throw new RuntimeException('No releases found for branch "' . $branchName . '"');
+        }
+
         krsort($branchReleases);
         return array_shift($branchReleases);
     }
@@ -164,7 +170,7 @@ class Repository
      */
     public function getInitialReleaseByBranchName(string $branchName): string
     {
-        return preg_replace('/^magento-2./', '', $branchName).'.0';
+        return preg_replace('/^magento-2./', '', $branchName) . '.0';
     }
 
     /**
@@ -184,7 +190,8 @@ class Repository
         try {
             $latestRelease = $this->getLatestReleaseByBranchName($branchName);
             return (new VersionUtil())->getNewVersion($latestRelease['tag_name']);
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
+            echo "ERROR: " . $e->getMessage();
             return $this->getInitialReleaseByBranchName($branchName);
         }
     }

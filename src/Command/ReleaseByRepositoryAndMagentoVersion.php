@@ -46,7 +46,7 @@ class ReleaseByRepositoryAndMagentoVersion extends Command
             $repositoryName = $helper->ask($input, $output, $question);
         }
 
-        $output->writeln('Repository: '.$repositoryName);
+        $output->writeln('Repository: ' . $repositoryName);
         $repository = RepositoryList::getRepositoryByName($repositoryName);
 
         $magentoVersion = (string)$input->getArgument('magento_version');
@@ -64,8 +64,7 @@ class ReleaseByRepositoryAndMagentoVersion extends Command
             throw new RuntimeException('Invalid Magento version');
         }
 
-        $newVersion = $repository->getNewVersionByBranchName('magento-'.$magentoVersion);
-        echo "Releasing new version $newVersion\n";
+        $newVersion = $repository->getNewVersionByBranchName('magento-' . $magentoVersion);
         $branch = 'magento-' . $magentoVersion;
         $repository->release($branch, $newVersion);
 
