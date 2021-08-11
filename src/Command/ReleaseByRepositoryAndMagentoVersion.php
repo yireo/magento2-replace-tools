@@ -65,6 +65,7 @@ class ReleaseByRepositoryAndMagentoVersion extends Command
         }
 
         $newVersion = $repository->getNewVersionByBranchName('magento-' . $magentoVersion);
+        $output->writeln('New version: ' . $newVersion);
         $branch = 'magento-' . $magentoVersion;
         $repository->release($branch, $newVersion);
 

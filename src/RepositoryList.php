@@ -23,6 +23,7 @@ class RepositoryList
             'magento2-replace-bundled',
             'magento2-replace-graphql',
             'magento2-replace-inventory',
+            'magento2-replace-pagebuilder',
             'magento2-replace-sample-data',
         ];
 
