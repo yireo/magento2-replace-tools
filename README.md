@@ -1,3 +1,74 @@
+# Magento Composer Replacement Tool
+This repository offers 
+
+## Installation of this plugin
+```bash
+composer require yireo/magento2-replace-tools
+```
+
+## Replacing packages
+List all current composer replacements:
+```bash
+composer replace:list
+```
+
+Replace a specific package:
+```bash
+composer replace:add foo/bar '2.0'
+```
+
+Remove a specific replacement:
+```bash
+composer replace:remove foo/bar
+```
+
+Remove a specific package (by using a version set to `*`):
+```bash
+composer replace:add foo/bar
+```
+
+## Replacing packages by bylk
+Replace all Magento Multi Source Inventory packages:
+```bash
+composer replace:bulk:add yireo/magento2-replace-inventory
+```
+
+This adds all replacements from this meta-package `yireo/magento2-replace-inventory` to your own `replace` section. And it also adds an additional section like the following:
+```json
+    "extra": {
+        "replace": {
+            "bulk": {
+                "yireo/magento2-replace-inventory": true
+            }
+        }
+    },
+```
+
+Replace all Magento GraphQL packages, but not the `magento/module-graph-ql` package itself:
+```bash
+composer replace:bulk:add yireo/magento2-replace-graphql
+composer replace:bulk:exclude magento/module-graph-ql @todo
+composer replace:bulk:build @todo
+```
+
+This adds all replacements from this meta-package `yireo/magento2-replace-graphql`, except the package `magento/module-graph-ql` to your own `replace` section. And it also adds an additional section like the following:
+```json
+    "extra": {
+        "replace": {
+            "bulk": {
+                "yireo/magento2-replace-inventory": true
+            },
+            "exclude": {
+                "magento/module-graph-ql": true
+            }
+        }
+    },
+```
+
+---
+
+## INFORMATION BELOW IS TO BE DEPRECATED
+
 # Magento 2 removal of (optional) modules included in the core
 This repository contains tools to maintain the following repositories:
 
