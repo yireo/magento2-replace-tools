@@ -1,5 +1,5 @@
 # Magento Composer Replacement Tool
-This repository offers a composer plugin to help you manage composer replacements in your root `composer.json`. Once this package is installed, the composer plugin is installed, which allows you to manage replacements via specific commands (`composer replace:?`). To make sure replacements don't conflict, this plugin adds its own section `extra.replace` to your `composer.json` as well.
+**This repository offers a composer plugin to help you manage composer replacements in your root `composer.json`. Once this package is installed, the composer plugin is installed, which allows you to manage replacements via specific commands (`composer replace:?`). To make sure replacements don't conflict, this plugin adds its own section `extra.replace` to your `composer.json` as well.**
 
 ## Installation of this plugin
 ```bash
