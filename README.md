@@ -1,12 +1,12 @@
 # Magento Composer Replacement Tool
-This repository offers 
+This repository offers a composer plugin to help you manage composer replacements in your root `composer.json`. Once this package is installed, the composer plugin is installed, which allows you to manage replacements via specific commands (`composer replace:?`). To make sure replacements don't conflict, this plugin adds its own section `extra.replace` to your `composer.json` as well.
 
 ## Installation of this plugin
 ```bash
 composer require yireo/magento2-replace-tools
 ```
 
-## Replacing packages
+## Replacing packages (any composer project)
 List all current composer replacements:
 ```bash
 composer replace:list
@@ -27,7 +27,7 @@ Remove a specific package (by using a version set to `*`):
 composer replace:add foo/bar
 ```
 
-## Replacing packages by bylk
+## Replacing packages by bulk (Magento-specific)
 Replace all Magento Multi Source Inventory packages:
 ```bash
 composer replace:bulk:add yireo/magento2-replace-inventory
@@ -65,12 +65,7 @@ This adds all replacements from this meta-package `yireo/magento2-replace-graphq
     },
 ```
 
----
-
-## INFORMATION BELOW IS TO BE DEPRECATED
-
-# Magento 2 removal of (optional) modules included in the core
-This repository contains tools to maintain the following repositories:
+## Available bulk packages
 
 - [yireo/magento2-replace-bundled](https://github.com/yireo/magento2-replace-bundled) removes third party bundled extensions
 Content Staging modules
@@ -81,19 +76,9 @@ Content Staging modules
 - [yireo/magento2-replace-sample-data](https://github.com/yireo/magento2-replace-sample-data) removes sample data modules
 - [yireo/magento2-replace-all](https://github.com/yireo/magento2-replace-all) removes all packages listed in the other directories
 
-Please note that the `replace` feature of composer as being used in these repositories is not well documented and probably abused a bit. If you
-are not willing to invest time to troubleshoot this yourself, please forget about this approach entirely so that we don't waste anyones time.
+Please note that the `replace` feature of composer as being used in these repositories is not well documented and probably abused a bit. If you are not willing to invest time to troubleshoot this yourself, please forget about this approach entirely so that we don't waste anyones time.
 
-## Usage
-The packages in the repositories above can be installed using simple composer commands (for instance using the `magento2-replace-bundled` package):
-
-- `composer require yireo/magento2-replace-bundled:^4.0 --no-update` for Magento 2.4.X
-- `composer require yireo/magento2-replace-bundled:^3.0 --no-update` for Magento 2.3.X
-
-And then:
-
-    composer install
-
+## Using replacements
 Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` and `bin/magento setup:upgrade` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
 
     rm -r generated/
