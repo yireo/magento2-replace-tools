@@ -7,7 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Yireo\ReplaceTools\Composer\Util\Replacer;
+use Yireo\ReplaceTools\Composer\Service\ReplaceBuilder;
 
 class ReplaceAddCommand extends BaseCommand
 {
@@ -23,8 +23,8 @@ class ReplaceAddCommand extends BaseCommand
     {
         $package = (string) $input->getArgument('package');
         $version = (string) $input->getArgument('version');
-        $replacer = new Replacer();
-        $replacer->replace($package, $version);
+        $replaceBuilder = new ReplaceBuilder();
+        $replaceBuilder->replace($package, $version);
 
         $output->writeln('Added composer replacement');
 

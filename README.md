@@ -6,6 +6,37 @@
 composer require yireo/magento2-replace-tools
 ```
 
+## General usage
+Through a series commands, this composer plugin aims to help you manage your `replace` section more efficiently. Instead of individually adding packages, packages are added in bulk through an additional composer section `extra.replace`:
+
+```json
+{
+    "replace": {
+        "klarna/module-kp-graph-ql": "*",
+        "magento/module-async-order-graph-ql": "*",
+        "magento/module-authorizenet-graph-ql": "*",
+        "magento/module-braintree-graph-ql": "*",
+        "magento/module-bundle-graph-ql": "*",
+        "magento/module-catalog-graph-ql": "*",
+        ...
+        "yireo/example-graph-ql"
+    },
+    "extra": {
+        "replace": {
+            "bulk": {
+                "yireo/magento2-replace-graph-ql": true
+            },
+            "exclude": {
+                "magento/module-graph-ql": true
+            },
+            "include": {
+                "yireo/example-graph-ql": true
+            }
+        }
+    }
+}
+```
+
 ## Replacing packages (any composer project)
 List all current composer replacements:
 ```bash
@@ -44,31 +75,47 @@ This adds all replacements from this meta-package `yireo/magento2-replace-invent
     },
 ```
 
-Replace all Magento GraphQL packages, but not the `magento/module-graph-ql` package itself:
+Replace all Magento GraphQL packages, but not the `magento/module-graph-ql` package itself, but again also replacing a package `yireo/example-graph-ql`:
 ```bash
 composer replace:bulk:add yireo/magento2-replace-graphql
-composer replace:bulk:exclude magento/module-graph-ql @todo
-composer replace:bulk:build @todo
+composer replace:bulk:exclude magento/module-graph-ql
+composer replace:bulk:include yireo/example-graph-ql
+composer replace:validate
+composer replace:build
 ```
 
-This adds all replacements from this meta-package `yireo/magento2-replace-graphql`, except the package `magento/module-graph-ql` to your own `replace` section. And it also adds an additional section like the following:
+This adds all replacements from this meta-package `yireo/magento2-replace-graphql` (except the package `magento/module-graph-ql` but including the package `yireo/example-graph-ql`) to your own `replace` section. And it also adds an additional section like the following:
 ```json
-    "extra": {
-        "replace": {
-            "bulk": {
-                "yireo/magento2-replace-inventory": true
-            },
-            "exclude": {
-                "magento/module-graph-ql": true
-            }
-        }
-    },
+{
+  "replace": {
+      "klarna/module-kp-graph-ql": "*",
+      "magento/module-async-order-graph-ql": "*",
+      "magento/module-authorizenet-graph-ql": "*",
+      "magento/module-braintree-graph-ql": "*",
+      "magento/module-bundle-graph-ql": "*",
+      "magento/module-catalog-graph-ql": "*",
+      ...
+      "yireo/example-graph-ql"
+  },  
+  "extra": {
+    "replace": {
+      "bulk": {
+        "yireo/magento2-replace-graph-ql": true
+      },
+      "exclude": {
+        "magento/module-graph-ql": true
+      },
+      "include": {
+        "yireo/example-graph-ql": true
+      }
+    }
+  }
+}
 ```
 
 ## Available bulk packages
 
 - [yireo/magento2-replace-bundled](https://github.com/yireo/magento2-replace-bundled) removes third party bundled extensions
-Content Staging modules
 - [yireo/magento2-replace-content-staging](https://github.com/yireo/magento2-replace-content-staging) removes optional Content Staging modules
 - [yireo/magento2-replace-core](https://github.com/yireo/magento2-replace-core) removes optional core modules
 - [yireo/magento2-replace-graphql](https://github.com/yireo/magento2-replace-graphql) removes optional GraphQL modules
@@ -78,45 +125,31 @@ Content Staging modules
 
 Please note that the `replace` feature of composer as being used in these repositories is not well documented and probably abused a bit. If you are not willing to invest time to troubleshoot this yourself, please forget about this approach entirely so that we don't waste anyones time.
 
-## Using replacements
-Once you install a replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` and `bin/magento setup:upgrade` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
+### Building composer replacements
+Use the following command to configure your `composer.json` for using bulk replacements:
+
+    composer replace:bulk add yireo/magento2-replace-bundled
+    composer replace:bulk add yireo/magento2-replace-inventory
+    composer replace:bulk add yireo/magento2-replace-graphql
+    composer replace:bulk add yireo/magento2-replace-sample-data
+    composer replace:validate
+    composer replace:build
+
+### Using composer replacements
+Once you have a `replace` section in your composer.json file
+
+    rm -r vendor/
+    composer update
+
+Do not just use `composer install`. Do not use regular composer commands, but please follow this procedure literally and to the point.
+
+## After having replaced Magento composer packages
+After you have installed a composer replacement, make sure to wipe out the `generated/` folder first and next, run `bin/magento setup:di:compile` and `bin/magento setup:upgrade` to see if Magento still works. Please note that these steps are generic developer steps, not related to this repository.
 
     rm -r generated/
     bin/magento setup:di:compile
     bin/magento setup:upgrade
-
-## Troubleshooting
-**Please note that in the tips below the `magento2-replace-bundled` package is assumed. Substitute this for the package that you are trying to install.**
-
-### If a package can not be installed right away
-If the `composer require` command does not work for you, try the following:
-
-    rm -r vendor/
-    composer require --no-update yireo/magento2-replace-bundled
-    composer install
-
-If this fails, try the following:
-
-    rm -r vendor/ composer.lock
-    composer require --no-update yireo/magento2-replace-bundled
-    composer update
-
-Last but not least, try to add the GitHub repository 
-
-    composer config repositories.magento2-replace-all vcs git@github.com:yireo/magento2-replace-bundled.git
-    composer require --no-update yireo/magento2-replace-bundled
-    composer update
-
-Please do **not** contact us for support (via email, Slack or GitHub issue) before having tried out the commands, including the `rm` commands. If you think that running the `rm` command is not needed, because you know how `composer update` works, let's debate this **after** you have actually tried out the instructions above.
-
-### What else could fail
-The following things might fail with these replacements:
-
-- A certain extension might have a dependency on Magento module X, documented via its `composer.json` or not. If so, skip
-  our main package but copy the `replace` lines to your own project composer.
-- After installing certain extensions, everything works fine on a composer level, but things fail when compiling DI
-  (`setup:di:compile`). If this concerns a setup with only core packages, make sure to open an **Issue**. 
-
+ 
 ## FAQ
 #### I try to install this with `composer require a/b` but get errors
 Please note that this kind of question is not going to be answered anymore, except here: Do **not** use a simple `composer require a/b` command. It is not documented above, it is not part of the procedure and it does not work. Do not reason that if you know composer, you know that a simple `composer require a/b` must work. If you think composer replacements are installed the way as composer packages, you do not know composer replacements.
@@ -147,25 +180,3 @@ Remember this repository offers a smart hack, not a supported solution. You can 
 
 #### How do I know if something is replaced?
 Unfortunately, composer does not offer a CLI for this and because the replacements are stored in these packages, they are not mentioned in your own projects `composer.json` (unless you put them there). However, by opening up the `composer.lock` file and searching for the keyword `replace` you can see which packages are replaced by all packages in your installation. A simple `composer show yireo/magento2-replace-bundled` shows which replacements are included in a specific package.
-
-## Testing
-To test if all packages are valid, I have used the script `magento2-run-tests.sh` included in this repo. 
-Copy this script to your system and run it. The scripts argument defaults to using the `@dev` versions of these
-replace packages:
-
-    ./magento2-run-tests.sh 2.3.4
-
-This will create a new Magento environment. If you would like to use an existing environment, use a second argument for the directory of your environment:
-
-    ./magento2-run-tests.sh 2.3.4 /var/www/html/my-magento
-
-Do NOT use this on a live site, because it will break things.
-
-In a generic environment, all tests (and therefore, all possible combinations of the replace packages) should work.
-
-## Development
-This repository is meant to be checked out together with the other repositories mentioned above, within the same parent folder.
-
-### magento2-generate-replace-all.php
-This tool will collect all `replace` entries and merge them together in the repository `yireo/magento2-replace-all`.
-

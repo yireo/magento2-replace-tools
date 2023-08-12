@@ -9,26 +9,31 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Yireo\ReplaceTools\Composer\Service\ReplaceBuilder;
 
-class ReplaceListCommand extends BaseCommand
+class ReplaceValidateCommand extends BaseCommand
 {
     protected function configure(): void
     {
-        $this->setName('replace:list');
-        $this->setDescription('List current composer replacements');
+        $this->setName('replace:validate');
+        $this->setDescription('Validate current composer replacements');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $table = new Table($output);
-        $table->setHeaders(['Package', 'Version']);
-
         $replaceBuilder = new ReplaceBuilder();
-        foreach ($replaceBuilder->read()->get() as $replacement) {
-            $table->addRow([$replacement->getComposerName(), $replacement->getVersion()]);
+        $errors = $replaceBuilder->getErrors();
+        if (empty($errors)) {
+            return Command::SUCCESS;
+        }
+
+        $table = new Table($output);
+        $table->setHeaders(['Error']);
+
+        foreach ($replaceBuilder->getErrors() as $error) {
+            $table->addRow([$error]);
         }
 
         $table->render();
 
-        return Command::SUCCESS;
+        return Command::FAILURE;
     }
 }
