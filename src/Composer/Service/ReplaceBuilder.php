@@ -98,6 +98,16 @@ class ReplaceBuilder
     }
 
     /**
+     * @return string[]
+     */
+    public function readRequires(): array
+    {
+        $jsonData = $this->getJsonData();
+        $requires = $jsonData['require'] ?? [];
+        return array_keys($requires);
+    }
+
+    /**
      * @return ReplacementCollection
      */
     public function readExcludes(): ReplacementCollection
@@ -283,6 +293,13 @@ class ReplaceBuilder
             }
 
             $errors[] = $error;
+        }
+
+        $requires = $this->readRequires();
+        foreach ($this->suggestedBulks() as $bulkName) {
+            if (in_array($bulkName, $requires)) {
+                $errors[] = 'Bulk "'.$bulkName.'" should not be in "require" section but in "extra.replace.bulk"';
+            }
         }
 
         return $errors;
