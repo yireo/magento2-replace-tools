@@ -74,6 +74,7 @@ class ReplaceBuilder
             'yireo/magento2-replace-bundled',
             'yireo/magento2-replace-inventory',
             'yireo/magento2-replace-graphql',
+            'yireo/magento2-replace-pagebuilder',
             'yireo/magento2-replace-sample-data',
             'yireo/magento2-replace-content-staging',
         ];
