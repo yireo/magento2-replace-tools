@@ -3,43 +3,50 @@
 namespace Yireo\ReplaceTools\Composer;
 
 use Composer\Composer;
-use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 
-class Plugin implements PluginInterface, EventSubscriberInterface, Capable
+class Plugin implements PluginInterface, Capable
 {
+    /**
+     * @param Composer $composer
+     * @param IOInterface $io
+     * @return void
+     */
     public function activate(Composer $composer, IOInterface $io)
     {
         $io->notice('Yireo Composer Replace Tools have been activated');
     }
 
+    /**
+     * @param Composer $composer
+     * @param IOInterface $io
+     * @return void
+     */
     public function deactivate(Composer $composer, IOInterface $io)
     {
         $io->notice('Yireo Composer Replace Tools have been deactivated');
     }
 
+    /**
+     * @param Composer $composer
+     * @param IOInterface $io
+     * @return void
+     */
     public function uninstall(Composer $composer, IOInterface $io)
     {
         $io->notice('Yireo Composer Replace Tools have been uninstalled');
     }
 
-    public static function getSubscribedEvents()
-    {
-        return [];
-        /*return [
-            PluginEvents::POST_FILE_DOWNLOAD => [
-
-            ]
-        ];*/
-    }
-
+    /**
+     * @return string[]
+     */
     public function getCapabilities()
     {
-        return array(
+        return [
             CommandProviderCapability::class => CommandProvider::class,
-        );
+        ];
     }
 }

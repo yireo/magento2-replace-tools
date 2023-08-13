@@ -3,8 +3,11 @@
 namespace Yireo\ReplaceTools\Composer\Service;
 
 use Composer\Factory;
-use Composer\Json\JsonFile;
 use GuzzleHttp\Exception\GuzzleException;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Yireo\ReplaceTools\Composer\Exception\HttpClientException;
 use Yireo\ReplaceTools\Composer\Exception\PackageException;
 use Yireo\ReplaceTools\Composer\Model\BulkReplacement;
@@ -13,12 +16,36 @@ use Yireo\ReplaceTools\Composer\Model\ReplacementCollection;
 
 class ReplaceBuilder
 {
+    private string $composerFile = '';
+    private Filesystem $filesystem;
+
+    /**
+     * @param FilesystemAdapter|null $filesystemAdapter
+     * @param string $composerFile
+     */
+    public function __construct(
+        ?Filesystem $filesystem = null,
+        string $composerFile = ''
+    ) {
+        if (empty($composerFile)) {
+            $composerFile = Factory::getComposerFile();
+        }
+
+        if (empty($filesystem)) {
+            $filesystem = new Filesystem(new LocalFilesystemAdapter(dirname($composerFile)));
+        }
+
+        $this->composerFile = $composerFile;
+        $this->filesystem = $filesystem;
+    }
+
     /**
      * @return ReplacementCollection
+     * @throws FilesystemException
      */
     public function read(): ReplacementCollection
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $replacements = $jsonData['replace'] ?? [];
         $collection = new ReplacementCollection();
         foreach ($replacements as $package => $version) {
@@ -31,10 +58,11 @@ class ReplaceBuilder
     /**
      * @param ReplacementCollection $replacements
      * @return void
+     * @throws FilesystemException
      */
     public function write(ReplacementCollection $replacements)
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $replacementData = $replacements->toArray();
         ksort($replacementData);
         $jsonData['replace'] = $replacementData;
@@ -45,6 +73,7 @@ class ReplaceBuilder
      * @param string $package
      * @param string $version
      * @return void
+     * @throws FilesystemException
      */
     public function replace(string $package, string $version)
     {
@@ -56,6 +85,7 @@ class ReplaceBuilder
     /**
      * @param Replacement $replacement
      * @return void
+     * @throws FilesystemException
      */
     public function remove(Replacement $replacement)
     {
@@ -82,10 +112,11 @@ class ReplaceBuilder
 
     /**
      * @return BulkReplacement[]
+     * @throws FilesystemException
      */
     public function readBulks(): array
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         if (empty($jsonData['extra']) || empty($jsonData['extra']['replace']) || empty($jsonData['extra']['replace']['bulk'])) {
             return [];
         }
@@ -100,21 +131,23 @@ class ReplaceBuilder
 
     /**
      * @return string[]
+     * @throws FilesystemException
      */
     public function readRequires(): array
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $requires = $jsonData['require'] ?? [];
         return array_keys($requires);
     }
 
     /**
      * @return ReplacementCollection
+     * @throws FilesystemException
      */
     public function readExcludes(): ReplacementCollection
     {
         $collection = new ReplacementCollection();
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         if (empty($jsonData['extra']) || empty($jsonData['extra']['replace']) || empty($jsonData['extra']['replace']['exclude'])) {
             return $collection;
         }
@@ -129,10 +162,11 @@ class ReplaceBuilder
     /**
      * @param ReplacementCollection $collection
      * @return void
+     * @throws FilesystemException
      */
     public function writeExcludes(ReplacementCollection $collection): void
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $jsonData['extra']['replace']['exclude'] = $collection->toArray();
         $this->writeJsonData($jsonData);
     }
@@ -140,6 +174,7 @@ class ReplaceBuilder
     /**
      * @param Replacement $replacement
      * @return void
+     * @throws FilesystemException
      */
     public function addExclude(Replacement $replacement)
     {
@@ -150,11 +185,12 @@ class ReplaceBuilder
 
     /**
      * @return ReplacementCollection
+     * @throws FilesystemException
      */
     public function readIncludes(): ReplacementCollection
     {
         $collection = new ReplacementCollection();
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         if (empty($jsonData['extra']) || empty($jsonData['extra']['replace']) || empty($jsonData['extra']['replace']['include'])) {
             return $collection;
         }
@@ -169,14 +205,20 @@ class ReplaceBuilder
     /**
      * @param ReplacementCollection $collection
      * @return void
+     * @throws FilesystemException
      */
     public function writeIncludes(ReplacementCollection $collection): void
     {
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $jsonData['extra']['replace']['include'] = $collection->toArray();
         $this->writeJsonData($jsonData);
     }
 
+    /**
+     * @param Replacement $replacement
+     * @return void
+     * @throws FilesystemException
+     */
     public function addInclude(Replacement $replacement)
     {
         $collection = $this->readIncludes();
@@ -187,6 +229,7 @@ class ReplaceBuilder
     /**
      * @param BulkReplacement[] $bulkReplacements
      * @return void
+     * @throws FilesystemException
      */
     public function writeBulks(array $bulkReplacements)
     {
@@ -196,7 +239,7 @@ class ReplaceBuilder
         }
 
         $bulkReplacementArray = array_unique($bulkReplacementArray);
-        $jsonData = $this->getJsonData();
+        $jsonData = $this->readJsonData();
         $jsonData['extra']['replace']['bulk'] = $bulkReplacementArray;
         $this->writeJsonData($jsonData);
     }
@@ -204,6 +247,7 @@ class ReplaceBuilder
     /**
      * @param BulkReplacement $bulkReplacement
      * @return void
+     * @throws FilesystemException
      */
     public function addBulk(BulkReplacement $bulkReplacement)
     {
@@ -215,6 +259,7 @@ class ReplaceBuilder
     /**
      * @param BulkReplacement $bulkReplacement
      * @return void
+     * @throws FilesystemException
      */
     public function removeBulk(BulkReplacement $bulkReplacement)
     {
@@ -229,15 +274,13 @@ class ReplaceBuilder
 
     /**
      * @return ReplacementCollection
+     * @throws FilesystemException
      */
-    private function getConfigured(): ReplacementCollection
+    public function getConfigured(): ReplacementCollection
     {
         $collection = new ReplacementCollection();
         foreach ($this->readBulks() as $bulkReplacement) {
-            try {
-                $collection->merge($bulkReplacement->fetch());
-            } catch (GuzzleException|HttpClientException|PackageException $e) {
-            }
+            $collection->merge($bulkReplacement->fetch());
         }
 
         foreach ($this->readExcludes()->get() as $excludeReplacement) {
@@ -308,6 +351,7 @@ class ReplaceBuilder
 
     /**
      * @return string[]
+     * @throws FilesystemException
      */
     public function build(): array
     {
@@ -329,30 +373,21 @@ class ReplaceBuilder
 
     /**
      * @return array
+     * @throws FilesystemException
      */
-    private function getJsonData(): array
+    private function readJsonData(): array
     {
-        $json = new JsonFile(Factory::getComposerFile());
-
-        return json_decode(file_get_contents($json->getPath()), true);
+        return json_decode($this->filesystem->read($this->composerFile), true);
     }
 
     /**
      * @param array $jsonData
      * @return void
+     * @throws FilesystemException
      */
     private function writeJsonData(array $jsonData)
     {
-        file_put_contents($this->getJsonPath(), json_encode($jsonData, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES));
-    }
-
-    /**
-     * @return string
-     */
-    private function getJsonPath(): string
-    {
-        $json = new JsonFile(Factory::getComposerFile());
-
-        return $json->getPath();
+        $contents = json_encode($jsonData, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
+        $this->filesystem->write($this->composerFile, $contents);
     }
 }
