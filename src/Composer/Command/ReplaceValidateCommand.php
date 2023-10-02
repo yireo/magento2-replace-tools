@@ -28,7 +28,7 @@ class ReplaceValidateCommand extends BaseCommand
         $table = new Table($output);
         $table->setHeaders(['Error']);
 
-        foreach ($replaceBuilder->getErrors() as $error) {
+        foreach ($errors as $error) {
             $table->addRow([$error]);
         }
 
