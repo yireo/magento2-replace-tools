@@ -346,6 +346,30 @@ class ReplaceBuilder
             }
         }
 
+        return array_merge($errors, $this->getErrorsFromBasicStructure());
+    }
+
+    private function getErrorsFromBasicStructure(): array
+    {
+        $errors = [];
+
+        $jsonData = $this->readJsonData();
+        if (!isset($jsonData['extra'])) {
+            return ['No section "extra" yet'];
+        }
+
+        if (!isset($jsonData['extra']['replace'])) {
+            return ['No section "extra.replace" yet'];
+        }
+
+        $elements = array_keys($jsonData['extra']['replace']);
+        $allowedElements = ['bulk', 'include', 'exclude'];
+        foreach ($elements as $element) {
+            if (!in_array($element, $allowedElements)) {
+                $errors[] = 'Unknown element "'.$element.'" in section "extra.replace"';
+            }
+        }
+
         return $errors;
     }
 
