@@ -2,8 +2,16 @@
 
 namespace Yireo\ReplaceTools\Composer\Model;
 
+use Composer\Factory;
+use Composer\IO\BufferIO;
+use Composer\IO\NullIO;
+use Composer\Package\BasePackage;
+use Composer\Repository\RepositoryFactory;
+use Composer\Repository\RepositoryManager;
+use Composer\Util\HttpDownloader;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Yireo\ReplaceTools\Composer\Exception\EmptyBulkException;
 use Yireo\ReplaceTools\Composer\Exception\HttpClientException;
 use Yireo\ReplaceTools\Composer\Exception\PackageException;
 
@@ -73,28 +81,41 @@ class BulkReplacement
             return $collections[$this->getComposerName()];
         }
 
-        $client = new Client();
-        $response = $client->get('https://repo.packagist.org/p2/'.$this->composerName.'.json');
-        if ($response->getStatusCode() !== 200) {
-            throw new HttpClientException('Packagist call failed: '.$response->getReasonPhrase());
+        $io = new BufferIO();
+        $composerConfig = Factory::createConfig($io, getcwd());
+
+        $localComposerFile = getcwd().'/composer.json';
+        if (file_exists($localComposerFile)) {
+            $localComposerConfig = json_decode(file_get_contents($localComposerFile), true);
+            $composerConfig->merge($localComposerConfig);
         }
 
-        $body = $response->getBody();
-        $data = json_decode($body->getContents(), true);
-        if (empty($data) || empty($data['packages']) || empty($data['packages'][$this->composerName])) {
-            throw new PackageException('Unknown package "'.$this->composerName.'"');
+        $httpDownloader = Factory::createHttpDownloader($io, $composerConfig);
+        $repositoryManager = RepositoryFactory::manager($io, $composerConfig, $httpDownloader);
+
+        $composerRepositories = $composerConfig->getRepositories();
+        $bulkReplacementPackage = null;
+        foreach ($composerRepositories as $composerRepository) {
+            //echo $composerRepository['url']."\n"; // @todo: Add debugging output
+            $repository = $repositoryManager->createRepository($composerRepository['type'], $composerRepository);
+            $bulkReplacementPackage = $repository->findPackage($this->composerName, '*');
+            if ($bulkReplacementPackage instanceof BasePackage) {
+                break;
+            }
         }
 
         $collection = new ReplacementCollection;
-        if (empty($data['packages'][$this->composerName][0]['replace'])) {
-            return $collection;
+        if (false === $bulkReplacementPackage instanceof BasePackage) {
+            throw new EmptyBulkException('No bulk package found with name "'.$this->composerName.'"');
         }
 
-        foreach ($data['packages'][$this->composerName][0]['replace'] as $package => $version) {
-            $collection->add(new Replacement($package, $version));
+        foreach ($bulkReplacementPackage->getReplaces() as $replace) {
+            $collection->add(new Replacement($replace->getTarget(), $replace->getPrettyConstraint()));
         }
 
         $collections[$this->getComposerName()] = $collection;
+        //@todo echo $io->getOutput();
+
         return $collection;
     }
 }

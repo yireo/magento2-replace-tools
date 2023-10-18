@@ -25,6 +25,7 @@ class ReplaceBuildCommand extends BaseCommand
             $output->writeln($message);
         }
 
+        $output->writeln('Your "composer.json" file has been updated. Remove the "composer.lock" file and "vendor/" folder and run "composer install" to rebuild your composer dependencies');
         return Command::SUCCESS;
     }
 }

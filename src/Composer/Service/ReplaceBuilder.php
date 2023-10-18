@@ -399,7 +399,7 @@ class ReplaceBuilder
      * @return array
      * @throws FilesystemException
      */
-    private function readJsonData(): array
+    public function readJsonData(): array
     {
         return json_decode($this->filesystem->read($this->composerFile), true);
     }
@@ -409,7 +409,7 @@ class ReplaceBuilder
      * @return void
      * @throws FilesystemException
      */
-    private function writeJsonData(array $jsonData)
+    public function writeJsonData(array $jsonData)
     {
         $contents = json_encode($jsonData, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
         $this->filesystem->write($this->composerFile, $contents);
