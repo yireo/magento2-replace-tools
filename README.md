@@ -128,10 +128,10 @@ Please note that the `replace` feature of composer as being used in these reposi
 ### Building composer replacements
 Use the following command to configure your `composer.json` for using bulk replacements:
 
-    composer replace:bulk add yireo/magento2-replace-bundled
-    composer replace:bulk add yireo/magento2-replace-inventory
-    composer replace:bulk add yireo/magento2-replace-graphql
-    composer replace:bulk add yireo/magento2-replace-sample-data
+    composer replace:bulk:add yireo/magento2-replace-bundled
+    composer replace:bulk:add yireo/magento2-replace-inventory
+    composer replace:bulk:add yireo/magento2-replace-graphql
+    composer replace:bulk:add yireo/magento2-replace-sample-data
     composer replace:validate
     composer replace:build
 
