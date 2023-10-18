@@ -24,7 +24,7 @@ class ReplaceBulkListCommand extends BaseCommand
 
         $replaceBuilder = new ReplaceBuilder();
         foreach ($replaceBuilder->readBulks() as $bulkReplacement) {
-            $table->addRow([$bulkReplacement]);
+            $table->addRow([$bulkReplacement->getComposerName()]);
         }
 
         $table->render();
