@@ -1,6 +1,7 @@
 {
     "name": "yireo/magento2-replace-tools",
     "description": "Tools to maintain yireo/magento2-replace packages",
+    "license": "OSL-3.0",
     "type": "composer-plugin",
     "autoload": {
         "psr-4": {
