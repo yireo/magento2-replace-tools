@@ -38,9 +38,14 @@ class GenerateComposerReplaceAll extends Command
             $replacements = [];
 
             foreach ($repositories as $repository) {
+                if ($repository->getName() === 'magento2-replace-all') {
+                    continue;
+                }
+
                 echo 'Reading "'.$repository->getName().'" with branch "'.$branch.'"'."\n";
                 $composerFile = $repository->getRemoteComposerFile($branch);
                 $repositoryReplacements = $composerFile->getReplace();
+
                 if (empty($repositoryReplacements)) {
                     throw new Exception('No replacements found');
                 }
