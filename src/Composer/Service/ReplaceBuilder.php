@@ -62,9 +62,18 @@ class ReplaceBuilder
      */
     public function write(ReplacementCollection $replacements)
     {
-        $jsonData = $this->readJsonData();
-        $replacementData = $replacements->toArray();
+        $replacementData = [];
+        foreach ($replacements->get() as $replacement) {
+            $composerName = $replacement->getComposerName();
+            if ($this->isMageOS()) {
+                $composerName = preg_replace('#^magento\/#', 'mage-os/', $composerName);
+            }
+            $replacementData[$composerName] = $replacement->getVersion();
+        }
+
         ksort($replacementData);
+
+        $jsonData = $this->readJsonData();
         $jsonData['replace'] = $replacementData;
         $this->writeJsonData($jsonData);
     }
@@ -108,6 +117,17 @@ class ReplaceBuilder
             'yireo/magento2-replace-sample-data',
             'yireo/magento2-replace-content-staging',
         ];
+    }
+
+    public function isMageOS(): bool
+    {
+        foreach ($this->readRequires() as $require) {
+            if ($require === 'mage-os/product-community-edition') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

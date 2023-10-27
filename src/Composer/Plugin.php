@@ -3,12 +3,18 @@
 namespace Yireo\ReplaceTools\Composer;
 
 use Composer\Composer;
+use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
+use Composer\Package\BasePackage;
+use Composer\Package\Package;
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 use Composer\Plugin\Capable;
+use Composer\Plugin\PluginEvents;
 use Composer\Plugin\PluginInterface;
+use Composer\Plugin\PrePoolCreateEvent;
 
-class Plugin implements PluginInterface, Capable
+class Plugin implements PluginInterface, Capable, EventSubscriberInterface
 {
     /**
      * @param Composer $composer
@@ -48,5 +54,42 @@ class Plugin implements PluginInterface, Capable
         return [
             CommandProviderCapability::class => CommandProvider::class,
         ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'pre-pool-create' => 'prePoolCreate',
+        ];
+    }
+
+    public function prePoolCreate(PrePoolCreateEvent $event)
+    {
+        $newPackages = [];
+        foreach ($event->getPackages() as $package) {
+            /*if (false === $this->hasReplaceSource($package, '')) {
+                $newPackages[] = $package;
+                continue;
+            }
+
+            $package->setReplaces([]);*/
+            $newPackages[] = $package;
+        }
+
+        $event->setPackages($newPackages);
+    }
+
+    private function hasReplaceSource(BasePackage $package, string $replaceSource):bool
+    {
+        foreach ($package->getReplaces() as $replace) {
+            if ($replace->getSource() === $replaceSource) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
