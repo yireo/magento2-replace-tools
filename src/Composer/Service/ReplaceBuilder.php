@@ -404,6 +404,7 @@ class ReplaceBuilder
             foreach ($currentReplacements->get() as $currentReplacement) {
                 if (false === $configuredReplacements->contains($currentReplacement)) {
                     $this->addInclude($currentReplacement);
+                    $configuredReplacements->add($currentReplacement);
                     $messages[] = 'Adding replacement "'.$currentReplacement->getComposerName(
                         ).'" to "extra.replace.include"';
                 }
