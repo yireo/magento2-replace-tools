@@ -64,11 +64,7 @@ class ReplaceBuilder
     {
         $replacementData = [];
         foreach ($replacements->get() as $replacement) {
-            $composerName = $replacement->getComposerName();
-            if ($this->isMageOS()) {
-                $composerName = preg_replace('#^magento\/#', 'mage-os/', $composerName);
-            }
-            $replacementData[$composerName] = $replacement->getVersion();
+            $replacementData[$replacement->getComposerName()] = $replacement->getVersion();
         }
 
         ksort($replacementData);
@@ -401,6 +397,8 @@ class ReplaceBuilder
     {
         $messages = [];
         $configuredReplacements = $this->getConfigured();
+
+        /*
         $currentReplacements = $this->read();
         foreach ($currentReplacements->get() as $currentReplacement) {
             if (false === $configuredReplacements->contains($currentReplacement)) {
@@ -408,7 +406,7 @@ class ReplaceBuilder
                 $messages[] = 'Adding replacement "'.$currentReplacement->getComposerName(
                     ).'" to "extra.replace.include"';
             }
-        }
+        }*/
 
         $this->write($configuredReplacements);
 

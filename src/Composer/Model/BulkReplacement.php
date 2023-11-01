@@ -100,6 +100,8 @@ class BulkReplacement
             $repository = $repositoryManager->createRepository($composerRepository['type'], $composerRepository);
             $bulkReplacementPackage = $repository->findPackage($this->composerName, '*');
             if ($bulkReplacementPackage instanceof BasePackage) {
+                //echo $bulkReplacementPackage->getName().":".$bulkReplacementPackage->getVersion()."\n"; // @todo: Add debugging output
+
                 break;
             }
         }

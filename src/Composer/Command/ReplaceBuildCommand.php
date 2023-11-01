@@ -6,6 +6,7 @@ use Composer\Command\BaseCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Yireo\ReplaceTools\Composer\Service\ReplaceBuilder;
 
@@ -15,6 +16,7 @@ class ReplaceBuildCommand extends BaseCommand
     {
         $this->setName('replace:build');
         $this->setDescription('Build composer replacements based on "extra.replace"');
+        //$this->addOption('', '', InputOption::VALUE_REQUIRED, '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

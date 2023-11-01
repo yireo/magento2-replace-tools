@@ -2,6 +2,8 @@
 
 namespace Yireo\ReplaceTools\Composer\Model;
 
+use AWS\CRT\HTTP\Request;
+
 class ReplacementCollection
 {
     /**
@@ -48,15 +50,22 @@ class ReplacementCollection
      */
     public function add(Replacement $replacement): void
     {
-        $this->replacements[] = $replacement;
+        $this->replacements[] = new Replacement($this->toMagentoNs($replacement->getComposerName()), $replacement->getVersion());
+
+        if (preg_match('#^(magento|mage-os)\/#', $replacement->getComposerName())) {
+            $this->replacements[] = new Replacement($this->toMageOSNs($replacement->getComposerName()), $replacement->getVersion());
+        }
     }
 
-    public function remove(Replacement $replacement)
+    public function remove(Replacement $removeReplacement)
     {
-        foreach ($this->replacements as $index => $r) {
-            if ($replacement->getComposerName() === $r->getComposerName()) {
+        foreach ($this->replacements as $index => $replacement) {
+            if ($this->toMagentoNs($removeReplacement->getComposerName()) === $replacement->getComposerName()) {
                 unset($this->replacements[$index]);
-                break;
+            }
+
+            if ($this->toMageOSNs($removeReplacement->getComposerName()) === $replacement->getComposerName()) {
+                unset($this->replacements[$index]);
             }
         }
     }
@@ -97,5 +106,15 @@ class ReplacementCollection
         }
 
         return $replacementArray;
+    }
+
+    private function toMagentoNs(string $composerName): string
+    {
+        return preg_replace('#^mage-os\/#', 'magento/', $composerName);
+    }
+
+    private function toMageOSNs(string $composerName): string
+    {
+        return preg_replace('#^magento\/#', 'mage-os/', $composerName);
     }
 }
