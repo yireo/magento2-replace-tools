@@ -390,23 +390,26 @@ class ReplaceBuilder
     }
 
     /**
+     * @param bool $copyExisting
      * @return string[]
      * @throws FilesystemException
      */
-    public function build(): array
+    public function build(bool $copyExisting = false): array
     {
         $messages = [];
         $configuredReplacements = $this->getConfigured();
 
-        /*
-        $currentReplacements = $this->read();
-        foreach ($currentReplacements->get() as $currentReplacement) {
-            if (false === $configuredReplacements->contains($currentReplacement)) {
-                $this->addInclude($currentReplacement);
-                $messages[] = 'Adding replacement "'.$currentReplacement->getComposerName(
-                    ).'" to "extra.replace.include"';
+        if ($copyExisting === true) {
+            $currentReplacements = $this->read();
+            foreach ($currentReplacements->get() as $currentReplacement) {
+                if (false === $configuredReplacements->contains($currentReplacement)) {
+                    $this->addInclude($currentReplacement);
+                    $messages[] = 'Adding replacement "'.$currentReplacement->getComposerName(
+                        ).'" to "extra.replace.include"';
+                }
             }
-        }*/
+
+        }
 
         $this->write($configuredReplacements);
 

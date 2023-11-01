@@ -16,13 +16,14 @@ class ReplaceBuildCommand extends BaseCommand
     {
         $this->setName('replace:build');
         $this->setDescription('Build composer replacements based on "extra.replace"');
-        //$this->addOption('', '', InputOption::VALUE_REQUIRED, '');
+        $this->addOption('copyExisting', 'c', InputOption::VALUE_OPTIONAL, 'Inspect your current "replace" section and try to copy it into "extra.replace"');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $copyExisting = (bool) $input->getOption('copyExisting');
         $replaceBuilder = new ReplaceBuilder();
-        $messages = $replaceBuilder->build();
+        $messages = $replaceBuilder->build($copyExisting);
         foreach ($messages as $message) {
             $output->writeln($message);
         }
