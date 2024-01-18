@@ -121,6 +121,10 @@ This adds all replacements from this meta-package `yireo/magento2-replace-graphq
 }
 ```
 
+### Note about `replace:build`
+
+⚠️ Warning: Due to the nature of its implementation, `replace:build` will replace your existing `replace` section in `composer.json`. If you replaced any individual dependencies here, make sure to re-add them after `replace:build`. At the moment this composer extension does not maintain the existing `replace` section of your `composer.json`
+
 ## Available bulk packages
 
 - [yireo/magento2-replace-bundled](https://github.com/yireo/magento2-replace-bundled) removes third party bundled extensions
