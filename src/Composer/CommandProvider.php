@@ -9,6 +9,8 @@ use Yireo\ReplaceTools\Composer\Command\ReplaceBulkAddCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceBulkListCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceBulkRemoveCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceConfigAddCommand;
+use Yireo\ReplaceTools\Composer\Command\ReplaceExcludeCommand;
+use Yireo\ReplaceTools\Composer\Command\ReplaceIncludeCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceListCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceRemoveCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceValidateCommand;
@@ -22,6 +24,8 @@ class CommandProvider implements CommandProviderCapability
             new ReplaceConfigAddCommand(),
             new ReplaceRemoveCommand(),
             new ReplaceListCommand(),
+            new ReplaceIncludeCommand(),
+            new ReplaceExcludeCommand(),
             new ReplaceBulkAddCommand(),
             new ReplaceBulkRemoveCommand(),
             new ReplaceBulkListCommand(),

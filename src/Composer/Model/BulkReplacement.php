@@ -94,23 +94,28 @@ class BulkReplacement
         $repositoryManager = RepositoryFactory::manager($io, $composerConfig, $httpDownloader);
 
         $composerRepositories = $composerConfig->getRepositories();
+        //if (empty($composerRepositories)) {
+            //echo "No composer repositories found\n";
+        //}
+
         $bulkReplacementPackage = null;
         foreach ($composerRepositories as $composerRepository) {
             //echo $composerRepository['url']."\n"; // @todo: Add debugging output
             $repository = $repositoryManager->createRepository($composerRepository['type'], $composerRepository);
             $bulkReplacementPackage = $repository->findPackage($this->composerName, '*');
+
             if ($bulkReplacementPackage instanceof BasePackage) {
-                //echo $bulkReplacementPackage->getName().":".$bulkReplacementPackage->getVersion()."\n"; // @todo: Add debugging output
+                echo $bulkReplacementPackage->getName().":".$bulkReplacementPackage->getVersion()."\n"; // @todo: Add debugging output
 
                 break;
             }
         }
 
-        $collection = new ReplacementCollection;
         if (false === $bulkReplacementPackage instanceof BasePackage) {
             throw new EmptyBulkException('No bulk package found with name "'.$this->composerName.'"');
         }
 
+        $collection = new ReplacementCollection;
         foreach ($bulkReplacementPackage->getReplaces() as $replace) {
             $collection->add(new Replacement($replace->getTarget(), $replace->getPrettyConstraint()));
         }
