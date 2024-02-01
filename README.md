@@ -86,8 +86,8 @@ This adds all replacements from this meta-package `yireo/magento2-replace-invent
 Replace all Magento GraphQL packages, but not the `magento/module-graph-ql` package itself, but again also replacing a package `yireo/example-graph-ql`:
 ```bash
 composer replace:bulk:add yireo/magento2-replace-graphql
-composer replace:bulk:exclude magento/module-graph-ql
-composer replace:bulk:include yireo/example-graph-ql
+composer replace:exclude magento/module-graph-ql
+composer replace:include yireo/example-graph-ql
 composer replace:validate
 composer replace:build
 ```
