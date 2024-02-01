@@ -6,7 +6,7 @@
 composer require yireo/magento2-replace-tools # Require this plugin
 composer replace:bulk:add yireo/magento2-replace-bundled # Add a replacement bulk package
 composer replace:build # Rebuild your composer.json based upon this
-composer update # Actually update all your dependencies
+composer update --lock # Actually update all your dependencies
 ```
 
 ## Installation of this plugin
@@ -151,7 +151,7 @@ Use the following command to configure your `composer.json` for using bulk repla
 Once you have a `replace` section in your composer.json file
 
     rm -r vendor/
-    composer update
+    composer update --lock
 
 Do not just use `composer install`. Do not use regular composer commands, but please follow this procedure literally and to the point.
 
