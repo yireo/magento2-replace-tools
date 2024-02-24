@@ -139,6 +139,11 @@ class ReplaceBuilder
 
         $bulkReplacements = [];
         foreach ($jsonData['extra']['replace']['bulk'] as $bulkName) {
+            $bulkName = (string)$bulkName;
+            if (empty($bulkName)) {
+                continue;
+            }
+
             $bulkReplacements[] = new BulkReplacement($bulkName);
         }
 
