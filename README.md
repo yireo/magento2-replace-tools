@@ -32,7 +32,7 @@ Through a series commands, this composer plugin aims to help you manage your `re
     "extra": {
         "replace": {
             "bulk": {
-                "yireo/magento2-replace-graph-ql": true
+                "yireo/magento2-replace-graph-ql"
             },
             "exclude": {
                 "magento/module-graph-ql": true
@@ -77,7 +77,7 @@ This adds all replacements from this meta-package `yireo/magento2-replace-invent
     "extra": {
         "replace": {
             "bulk": {
-                "yireo/magento2-replace-inventory": true
+                "yireo/magento2-replace-inventory"
             }
         }
     },
@@ -108,13 +108,13 @@ This adds all replacements from this meta-package `yireo/magento2-replace-graphq
   "extra": {
     "replace": {
       "bulk": {
-        "yireo/magento2-replace-graph-ql": true
+        "yireo/magento2-replace-graph-ql"
       },
       "exclude": {
-        "magento/module-graph-ql": true
+        "magento/module-graph-ql": "*"
       },
       "include": {
-        "yireo/example-graph-ql": true
+        "yireo/example-graph-ql": "*"
       }
     }
   }
