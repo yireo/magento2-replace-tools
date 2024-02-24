@@ -1,7 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Yireo\ReplaceTools\Composer\Model;
 
+use Composer\Downloader\TransportException;
 use Composer\Factory;
 use Composer\IO\BufferIO;
 use Composer\IO\NullIO;
@@ -21,7 +23,7 @@ class BulkReplacement
      * @var string
      */
     private string $composerName;
-
+    
     /**
      * @param string $composerName
      */
@@ -30,7 +32,7 @@ class BulkReplacement
     ) {
         $this->composerName = $composerName;
     }
-
+    
     /**
      * @return string
      */
@@ -38,7 +40,7 @@ class BulkReplacement
     {
         return $this->composerName;
     }
-
+    
     /**
      * @return int
      * @throws GuzzleException
@@ -49,7 +51,7 @@ class BulkReplacement
     {
         return $this->fetch()->count();
     }
-
+    
     /**
      * @param Replacement $search
      * @return bool
@@ -64,10 +66,10 @@ class BulkReplacement
                 return true;
             }
         }
-
+        
         return false;
     }
-
+    
     /**
      * @return ReplacementCollection
      * @throws HttpClientException
@@ -80,49 +82,55 @@ class BulkReplacement
         if (isset($collections[$this->getComposerName()])) {
             return $collections[$this->getComposerName()];
         }
-
+        
         $io = new BufferIO();
         $composerConfig = Factory::createConfig($io, getcwd());
-
-        $localComposerFile = getcwd().'/composer.json';
+        
+        $localComposerFile = getcwd() . '/composer.json';
         if (file_exists($localComposerFile)) {
             $localComposerConfig = json_decode(file_get_contents($localComposerFile), true);
             $composerConfig->merge($localComposerConfig);
         }
-
+        
         $httpDownloader = Factory::createHttpDownloader($io, $composerConfig);
         $repositoryManager = RepositoryFactory::manager($io, $composerConfig, $httpDownloader);
-
+        
         $composerRepositories = $composerConfig->getRepositories();
         //if (empty($composerRepositories)) {
-            //echo "No composer repositories found\n";
+        //echo "No composer repositories found\n";
         //}
-
-        $bulkReplacementPackage = null;
+        
+        $bulk = null;
         foreach ($composerRepositories as $composerRepository) {
             //echo $composerRepository['url']."\n"; // @todo: Add debugging output
-            $repository = $repositoryManager->createRepository($composerRepository['type'], $composerRepository);
-            $bulkReplacementPackage = $repository->findPackage($this->composerName, '*');
-
-            if ($bulkReplacementPackage instanceof BasePackage) {
-                echo $bulkReplacementPackage->getName().":".$bulkReplacementPackage->getVersion()."\n"; // @todo: Add debugging output
-
-                break;
+            try {
+                $repository = $repositoryManager->createRepository($composerRepository['type'], $composerRepository);
+                $bulk = $repository->findPackage($this->composerName, '*');
+            } catch (\Throwable $exception) {
+                //echo "WARNING: ".$exception->getMessage()."\n"; // @todo: Add debugging output
+                continue;
             }
+            
+            if (false === $bulk instanceof BasePackage) {
+                continue;
+            }
+            
+            echo 'Found ' . $bulk->getName() . ":" . $bulk->getVersion() . "\n"; // @todo: Add debugging output
+            break;
         }
-
-        if (false === $bulkReplacementPackage instanceof BasePackage) {
-            throw new EmptyBulkException('No bulk package found with name "'.$this->composerName.'"');
+        
+        if (false === $bulk instanceof BasePackage) {
+            throw new EmptyBulkException('No bulk package found with name "' . $this->composerName . '"');
         }
-
+        
         $collection = new ReplacementCollection;
-        foreach ($bulkReplacementPackage->getReplaces() as $replace) {
+        foreach ($bulk->getReplaces() as $replace) {
             $collection->add(new Replacement($replace->getTarget(), $replace->getPrettyConstraint()));
         }
-
+        
         $collections[$this->getComposerName()] = $collection;
         //@todo echo $io->getOutput();
-
+        
         return $collection;
     }
 }
