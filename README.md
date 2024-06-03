@@ -3,7 +3,7 @@
 
 ## Quickstart
 ```bash
-composer require yireo/magento2-replace-tools # Require this plugin
+composer require yireo/magento2-replace-tools --dev # Require this plugin
 composer replace:bulk:add yireo/magento2-replace-bundled # Add a replacement bulk package
 composer replace:build # Rebuild your composer.json based upon this
 composer update --lock # Actually update all your dependencies
@@ -11,7 +11,7 @@ composer update --lock # Actually update all your dependencies
 
 ## Installation of this plugin
 ```bash
-composer require yireo/magento2-replace-tools
+composer require yireo/magento2-replace-tools --dev
 ```
 
 ## General usage
