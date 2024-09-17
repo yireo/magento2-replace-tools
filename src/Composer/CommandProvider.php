@@ -14,6 +14,7 @@ use Yireo\ReplaceTools\Composer\Command\ReplaceIncludeCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceListCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceRemoveCommand;
 use Yireo\ReplaceTools\Composer\Command\ReplaceValidateCommand;
+use Yireo\ReplaceTools\Composer\Command\ReplaceMultipleAddCommand;
 
 class CommandProvider implements CommandProviderCapability
 {
@@ -31,6 +32,7 @@ class CommandProvider implements CommandProviderCapability
             new ReplaceBulkListCommand(),
             new ReplaceValidateCommand(),
             new ReplaceBuildCommand(),
+            new ReplaceMultipleAddCommand(),
         ];
     }
 }
