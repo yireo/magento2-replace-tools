@@ -35,10 +35,10 @@ Through a series commands, this composer plugin aims to help you manage your `re
                 "yireo/magento2-replace-graph-ql"
             },
             "exclude": {
-                "magento/module-graph-ql": true
+                "magento/module-graph-ql"
             },
             "include": {
-                "yireo/example-graph-ql": true
+                "yireo/example-graph-ql"
             }
         }
     }
@@ -64,6 +64,18 @@ composer replace:remove foo/bar
 Remove a specific package (by using a version set to `*`):
 ```bash
 composer replace:add foo/bar
+```
+
+Exclude a specific package from the replace section (so include the package when installing):
+
+```bash
+composer replace:exclude foo/bar
+```
+
+Include a specific package from the replace section (override a package that has been added to the replace list by a bulk package):
+
+```bash
+composer replace:include foo/bar
 ```
 
 ## Replacing packages by bulk (Magento-specific)
@@ -111,10 +123,10 @@ This adds all replacements from this meta-package `yireo/magento2-replace-graphq
         "yireo/magento2-replace-graph-ql"
       },
       "exclude": {
-        "magento/module-graph-ql": "*"
+        "magento/module-graph-ql"
       },
       "include": {
-        "yireo/example-graph-ql": "*"
+        "yireo/example-graph-ql"
       }
     }
   }
