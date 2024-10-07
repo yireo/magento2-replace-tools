@@ -173,6 +173,45 @@ After you have installed a composer replacement, make sure to wipe out the `gene
     rm -r generated/
     bin/magento setup:di:compile
     bin/magento setup:upgrade
+
+## Sample for Hyva Themes
+The following shows an example configuration section for your `composer.json`:
+```json
+{
+    "extra": {
+        "replace": {
+            "bulk": [
+                "yireo/magento2-replace-core",
+                "yireo/magento2-replace-content-staging",
+                "yireo/magento2-replace-inventory",
+                "yireo/magento2-replace-bundled",
+                "yireo/magento2-replace-graphql",
+                "yireo/magento2-replace-sample-data"
+            ],
+            "exclude": [
+                "magento/module-graph-ql",
+                "magento/module-graph-ql-cache",
+                "magento/module-catalog-graph-ql",
+                "magento/module-customer-graph-ql",
+                "magento/module-eav-graph-ql",
+                "magento/module-sales-graph-ql",
+                "magento/module-quote-graph-ql"
+            ],
+            "include": [
+                "magento/module-admin-graph-ql-server",
+                "magento/module-graph-ql-server",
+                "magento/page-builder",
+                "magento/module-service-proxy",
+                "magento/services-connector",
+                "magento/services-id",
+                "magento/module-services-id-graph-ql-server",
+                "magento/module-services-id-layout",
+                "magento/payment-services"
+            ]
+        }
+    }
+}
+```
  
 ## FAQ
 #### I try to install this with `composer require a/b` but get errors
@@ -204,3 +243,4 @@ Remember this repository offers a smart hack, not a supported solution. You can 
 
 #### How do I know if something is replaced?
 Unfortunately, composer does not offer a CLI for this and because the replacements are stored in these packages, they are not mentioned in your own projects `composer.json` (unless you put them there). However, by opening up the `composer.lock` file and searching for the keyword `replace` you can see which packages are replaced by all packages in your installation. A simple `composer show yireo/magento2-replace-bundled` shows which replacements are included in a specific package.
+
