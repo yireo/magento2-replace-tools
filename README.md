@@ -178,7 +178,7 @@ After you have installed a composer replacement, make sure to wipe out the `gene
 The following shows an example configuration section for your `composer.json`:
 ```json
 {
-    "extra": {
+   "extra": {
         "replace": {
             "bulk": [
                 "yireo/magento2-replace-core",
@@ -188,26 +188,26 @@ The following shows an example configuration section for your `composer.json`:
                 "yireo/magento2-replace-graphql",
                 "yireo/magento2-replace-sample-data"
             ],
-            "exclude": [
-                "magento/module-graph-ql",
-                "magento/module-graph-ql-cache",
-                "magento/module-catalog-graph-ql",
-                "magento/module-customer-graph-ql",
-                "magento/module-eav-graph-ql",
-                "magento/module-sales-graph-ql",
-                "magento/module-quote-graph-ql"
-            ],
-            "include": [
-                "magento/module-admin-graph-ql-server",
-                "magento/module-graph-ql-server",
-                "magento/page-builder",
-                "magento/module-service-proxy",
-                "magento/services-connector",
-                "magento/services-id",
-                "magento/module-services-id-graph-ql-server",
-                "magento/module-services-id-layout",
-                "magento/payment-services"
-            ]
+            "exclude": {
+                "magento/module-graph-ql": "*",
+                "magento/module-graph-ql-cache": "*",
+                "magento/module-catalog-graph-ql": "*",
+                "magento/module-customer-graph-ql": "*",
+                "magento/module-eav-graph-ql": "*",
+                "magento/module-sales-graph-ql": "*",
+                "magento/module-quote-graph-ql": "*"
+            },
+            "include": {
+                "magento/module-admin-graph-ql-server": "*",
+                "magento/module-graph-ql-server": "*",
+                "magento/page-builder": "*",
+                "magento/module-service-proxy": "*",
+                "magento/services-connector": "*",
+                "magento/services-id": "*",
+                "magento/module-services-id-graph-ql-server": "*",
+                "magento/module-services-id-layout": "*",
+                "magento/payment-services": "*"
+            }
         }
     }
 }
